@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource majorVersion="1" minorVersion="11" useXmlUI="false">
+    <image name="1 (19).jpg"  />
+    <image name="border.png"  />
+    <image name="kkj.png"  />
+    <image name="nour.png"  />
+    <image name="questions.jpg"  />
+    <image name="quiz.png"  />
+    <theme name="Theme">
+        <val key="@includeNativeBool" value="true" />
+    </theme>
+</resource>
