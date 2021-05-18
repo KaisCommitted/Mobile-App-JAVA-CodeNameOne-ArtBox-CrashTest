@@ -362,7 +362,7 @@ img1.addActionListener((ActionEvent e) -> {
             }
 
         });
-       
+       /* content */
     }
     
     private void updateArrowPosition(Button b, Label arrow) {

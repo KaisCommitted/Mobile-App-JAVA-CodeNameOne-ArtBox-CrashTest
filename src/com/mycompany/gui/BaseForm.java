@@ -92,6 +92,8 @@ public class BaseForm extends Form {
             }
         });
         tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_SETTINGS, e -> new UserProfile(res).show());
+        tb.addMaterialCommandToSideMenu("Announcements", FontImage.MATERIAL_ADB, e -> new UserProfile(res).show());
         tb.addMaterialCommandToSideMenu("Logout", FontImage.MATERIAL_EXIT_TO_APP, e -> new WalkthruForm(res).show());
+         
     }
 }

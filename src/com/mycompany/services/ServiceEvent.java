@@ -46,73 +46,80 @@ public class ServiceEvent {
     }
 
     public boolean addEvent(Evenement E) {
-        
-        
-        String url = Statics.BASE_URL + "/evenement/json/addEvent?NomEvent=" + E.getNom_event() 
-                + "&description=" + E.getDescription() 
-                + "&locationEvent=" + E.getLocation_event() 
+
+        String url = Statics.BASE_URL + "/evenement/json/addEvent?NomEvent=" + E.getNom_event()
+                + "&description=" + E.getDescription()
+                + "&locationEvent=" + E.getLocation_event()
                 + "&typeEvent=" + E.getType_event()
                 + "&categorie=" + E.getCategorie().getCategorie_name()
                 + "&idOrg=" + E.getId_org().getId_user()
                 + "&NbMax=" + E.getNb_max()
-                + "&date=" + E.getDate_event() 
-                 + "&image=" + E.getImage_event(); //création de l'URL
+                + "&date=" + E.getDate_event()
+                + "&image=" + E.getImage_event(); //création de l'URL
         req.setUrl(url);// Insertion de l'URL de notre demande de connexion
         req.addResponseListener(new ActionListener<NetworkEvent>() {
             @Override
             public void actionPerformed(NetworkEvent evt) {
-                resultOK = req.getResponseCode() == 200; 
-                req.removeResponseListener(this); 
+                resultOK = req.getResponseCode() == 200;
+                req.removeResponseListener(this);
             }
         });
         NetworkManager.getInstance().addToQueueAndWait(req);
         return resultOK;
     }
 
-   
-    
-     public ArrayList<Evenement> displayEvents() {
+    public ArrayList<Evenement> displayEvents() {
         ArrayList<Evenement> events = new ArrayList<>();
-         String url = Statics.BASE_URL + "/evenement/json/displayEvent";
+        String url = Statics.BASE_URL + "/evenement/json/displayEvent";
         req.setUrl(url);
         req.addResponseListener((NetworkEvent evt) -> {
             JSONParser jsonp;
             jsonp = new JSONParser();
-            
+
             try {
-                 Map<String, Object> mapEvents = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
+                Map<String, Object> mapEvents = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
                 List<Map<String, Object>> listOfMaps = (List<Map<String, Object>>) mapEvents.get("root");
                 for (Map<String, Object> obj : listOfMaps) {
-                   
+
                     Evenement E = new Evenement();
-               
- float id = Float.parseFloat(obj.get("id").toString());
+
+                    float id = Float.parseFloat(obj.get("id").toString());
 //                float nbMax=  Float.parseFloat(obj.get("NbMax").toString());
-                E.setId((int) id);
-                String date="";
-               // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                //date= format.format(obj.get("date"));
-                E.setDate_event(obj.get("date").toString());
+                    E.setId((int) id);
+                   
                   
-                        // E.setCategorie((Categorie) obj.get("categorie"));
-              //  E.setDate_event("2025-01-01");
-            
-                E.setDescription(obj.get("description").toString());
-               // E.setId_org((User) obj.get("idOrg"));
-                E.setImage_event(obj.get("imageEvent").toString());
-               // E.setLocation_event(obj.get("locationEvent").toString());
-                //E.setNb_max((int) nbMax);
-                //E.setCapacite_event(E.getNb_max());
-                //E.setRating(0);
-                //E.setType_event(obj.get("typeEvent").toString());
-                E.setNom_event(obj.get("nomEvent").toString());
-               
-                events.add(E);
-                
+                    E.setDate_event(obj.get("date").toString());
+
+                  
+                    E.setDescription(obj.get("description").toString());
+                    
+                    E.setImage_event(obj.get("imageEvent").toString());
+                    
+                    String type = obj.get("typeEvent").toString();
+                    type = type.substring(10, type.length() - 1);
+                    E.setType_event(type);
+
+                    String categorie = obj.get("categorie").toString();
+                    categorie = categorie.substring(15, categorie.length() - 1);
+
+                    Categorie C = new Categorie();
+                    C.setCategorie_name(categorie);
+                   
+                    String username= obj.get("idOrg").toString();
+                    username = username.substring(10, username.length() - 1); 
+   User U = new User();
+   U.setUsername(username);
+                    
+                    E.setId_org(U);
+                    E.setCategorie(C);
+                    E.setNom_event(obj.get("nomEvent").toString());
+                    System.out.println(E.toString());
+                    events.add(E);
+
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
-             
+
             }
         });
         //  return null;
@@ -120,5 +127,4 @@ public class ServiceEvent {
         return events;
     }
 
-   
 }
