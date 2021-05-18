@@ -84,38 +84,34 @@ public class ServiceEvent {
                     Evenement E = new Evenement();
 
                     float id = Float.parseFloat(obj.get("id").toString());
-//                float nbMax=  Float.parseFloat(obj.get("NbMax").toString());
-                    E.setId((int) id);
-                   
-                  
-                    E.setDate_event(obj.get("date").toString());
+//                
 
-                  
-                    E.setDescription(obj.get("description").toString());
-                    
-                    E.setImage_event(obj.get("imageEvent").toString());
-                    
                     String type = obj.get("typeEvent").toString();
                     type = type.substring(10, type.length() - 1);
-                    E.setType_event(type);
 
+                    //9a3ed yarjaali bhchichou brichou donc kaadi ncoupi menou ken feli hachti bih eli houwa esm l categorie
                     String categorie = obj.get("categorie").toString();
                     categorie = categorie.substring(15, categorie.length() - 1);
 
                     Categorie C = new Categorie();
                     C.setCategorie_name(categorie);
-                   
-                    String username= obj.get("idOrg").toString();
-                    username = username.substring(10, username.length() - 1); 
-   User U = new User();
-   U.setUsername(username);
-                    
+
+                    String username = obj.get("idOrg").toString();
+                    username = username.substring(10, username.length() - 1);
+
+                    User U = new User();
+                    U.setUsername(username);
+
+                    E.setId((int) id);
+                    E.setDate_event(obj.get("date").toString());
+                    E.setType_event(type);
+                    E.setDescription(obj.get("description").toString());
+                    E.setImage_event(obj.get("imageEvent").toString());
                     E.setId_org(U);
                     E.setCategorie(C);
                     E.setNom_event(obj.get("nomEvent").toString());
                     System.out.println(E.toString());
                     events.add(E);
-
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
