@@ -48,8 +48,10 @@ import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
 import com.mycompany.entities.Evenement;
 import com.mycompany.services.ServiceEvent;
+import static com.mycompany.utils.Statics.CurrentUser;
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 
 
@@ -174,7 +176,7 @@ public class EventsAll extends BaseForm {
         //Content
          ArrayList<Evenement> list = ServiceEvent.getInstance().displayAllEvents();
 
-       ListEvents(list);
+       ListEvents(list,res);
        //Content 
        
     }
@@ -224,9 +226,55 @@ public class EventsAll extends BaseForm {
         swipe.addTab("", page1);
     }
     
-   private void addButton(Image img, String title, String org, String dateHosted, String location,String description) {
+   private void addButton(Image img, String title, String org, String dateHosted, String location,String description,Evenement E,Resources res) {
        int height = Display.getInstance().convertToPixels(40f);
        int width = Display.getInstance().convertToPixels(60f);
+      
+       
+       
+       Label delete = new Label(" ");
+
+        delete.setUIID("NewsTopLine");
+        Style supprimerStyle = new Style(delete.getUnselectedStyle());
+        supprimerStyle.setFgColor(0xf21f21);
+
+        FontImage supprimerImage = FontImage.createMaterial(FontImage.MATERIAL_DELETE, supprimerStyle);
+        delete.setIcon(supprimerImage);
+        delete.setTextPosition(RIGHT);
+
+        //Onclick delete btn
+        delete.addPointerPressedListener(l -> {
+            Dialog dig = new Dialog("Delete");
+            if (dig.show("Delete", "Are you sure you want to delete this event?", "Cancel", "Yes")) {
+                dig.dispose();
+            } else {
+                dig.dispose();
+                //appel fct supp service
+                if (ServiceEvent.getInstance().deleteEvent(E.getId())) {
+                    try {
+                        new EventsAll(res).show();
+                    } catch (IOException ex) {
+                       
+                    }
+                }
+            }
+        });
+       /*TextArea delete = new TextArea("Delete my event");
+       delete.setUIID("NewsTopLine");
+       delete.setEditable(false);
+       delete.getAllStyles().setAlignment(TextArea.RIGHT);
+       delete.setVisible(false);
+        delete.addActionListener((e) -> {
+            try {
+                InfiniteProgress ip = new InfiniteProgress();
+                final Dialog ipDlg = ip.showInifiniteBlocking();
+                new EventsAll(res).show();
+                refreshTheme();
+            } catch (IOException ex) {
+               
+            }
+        });*/
+       if (org.equals(CurrentUser.getUsername())){delete.setVisible(true);}
        Button image = new Button(img.fill(width, height));
        image.setUIID("Label");
        TextArea HostedBy = new TextArea(org+" is Hosting "+title);
@@ -254,19 +302,23 @@ public class EventsAll extends BaseForm {
        TextArea locationTxt = new TextArea("At "+location);
       locationTxt.setUIID("NewsTopLine");
        locationTxt.setEditable(false);
-       
-       cnt.add(BorderLayout.CENTER, 
+      
+         cnt.add(BorderLayout.CENTER, 
                BoxLayout.encloseY(
+                       delete, 
                        image,
+                       
                        
                        underTitle,
                        BoxLayout.encloseX(date, locationTxt)
                ));
+        
+        
        add(cnt);
        image.addActionListener(e -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
    }
    
-   public void ListEvents(ArrayList<Evenement> list )
+   public void ListEvents(ArrayList<Evenement> list,Resources res )
    {
     for (Evenement E : list) {
             String urlImage = "1 (19).jpg";
@@ -288,7 +340,7 @@ public class EventsAll extends BaseForm {
         }
            
             
-            addButton(logo, E.getNom_event(), E.getId_org().getUsername(), E.getDate_event(), E.getLocation_event(),E.getDescription());
+            addButton(logo, E.getNom_event(), E.getId_org().getUsername(), E.getDate_event(), E.getLocation_event(),E.getDescription(),E,res);
             
             
 

@@ -201,6 +201,21 @@ public class ServiceEvent {
         NetworkManager.getInstance().addToQueueAndWait(req);
         return Types;
     }
+     
+     
+      public boolean deleteEvent(int id) {
+        String url = Statics.BASE_URL + "evenement/json/deleteEvent?id=" + id;
+        req.setUrl(url);
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                req.removeResponseCodeListener(this);
+            }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return true;
+    }
+
 
    
 }

@@ -67,6 +67,7 @@ import com.mycompany.entities.Categorie;
 import com.mycompany.entities.Evenement;
 import com.mycompany.entities.User;
 import com.mycompany.services.ServiceEvent;
+import static com.mycompany.utils.Statics.CurrentUser;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -222,7 +223,7 @@ protected String saveFileToDevice(String hi, String ext) throws IOException {
       /*  Content */
         TextField tfName = new TextField("","Event Name");
          tfName.setUIID("TextFieldBalck");
-         addStringValue("Event name", tfName);
+         addStringValue("Event Name", tfName);
          
        
          
@@ -350,8 +351,7 @@ img1.addActionListener((ActionEvent e) -> {
                     InfiniteProgress ip = new InfiniteProgress();
                     final Dialog iDialog = ip.showInfiniteBlocking();
                    Categorie C = new Categorie(1, String.valueOf(comboCat.getSelectedItem()));
-                        User CurrentUser = new User();
-                        CurrentUser.setId_user(18);
+                        
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                         String date=""; 
                         date =format.format(datePicker.getDate());
