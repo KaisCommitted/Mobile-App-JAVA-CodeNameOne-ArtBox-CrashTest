@@ -68,9 +68,15 @@ public class ServiceEvent {
         return resultOK;
     }
 
-    public ArrayList<Evenement> displayEvents() {
-        ArrayList<Evenement> events = new ArrayList<>();
+    public ArrayList<Evenement> displayAllEvents() {
+
         String url = Statics.BASE_URL + "/evenement/json/displayEvent";
+        return displayEvents(url);
+    }
+
+    public ArrayList<Evenement> displayEvents(String url) {
+        ArrayList<Evenement> events = new ArrayList<>();
+
         req.setUrl(url);
         req.addResponseListener((NetworkEvent evt) -> {
             JSONParser jsonp;
@@ -102,6 +108,7 @@ public class ServiceEvent {
                     User U = new User();
                     U.setUsername(username);
 
+                    E.setLocation_event(obj.get("locationEvent").toString());
                     E.setId((int) id);
                     E.setDate_event(obj.get("date").toString());
                     E.setType_event(type);
@@ -110,7 +117,7 @@ public class ServiceEvent {
                     E.setId_org(U);
                     E.setCategorie(C);
                     E.setNom_event(obj.get("nomEvent").toString());
-                    System.out.println(E.toString());
+
                     events.add(E);
                 }
             } catch (Exception ex) {
@@ -123,4 +130,77 @@ public class ServiceEvent {
         return events;
     }
 
+    public ArrayList<Categorie> displayCat(String url) {
+        ArrayList<Categorie> Cats = new ArrayList<>();
+
+        req.setUrl(url);
+        req.addResponseListener((NetworkEvent evt) -> {
+            JSONParser jsonp;
+            jsonp = new JSONParser();
+
+            try {
+                Map<String, Object> mapEvents = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
+                List<Map<String, Object>> listOfMaps = (List<Map<String, Object>>) mapEvents.get("root");
+                for (Map<String, Object> obj : listOfMaps) {
+
+                    Categorie Cat = new Categorie();
+
+                    Cat.setCategorie_name(obj.get("categorieName").toString());
+                    Cat.setCategorie_image(obj.get("categorieImage").toString());
+                    Cats.add(Cat);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+
+            }
+        });
+        //  return null;
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return Cats;
+    }
+
+    public ArrayList<Categorie> displayCats() {
+
+        String url = Statics.BASE_URL + "/categorie/json/displayCat";
+        return displayCat(url);
+    }
+
+    
+     public ArrayList<String> displayTypes() {
+
+        String url = Statics.BASE_URL + "/type/event/json/displayType";
+        return displayType(url);
+    }
+     
+     
+     
+     public ArrayList<String> displayType(String url) {
+        ArrayList<String> Types = new ArrayList<>();
+
+        req.setUrl(url);
+        req.addResponseListener((NetworkEvent evt) -> {
+            JSONParser jsonp;
+            jsonp = new JSONParser();
+
+            try {
+                Map<String, Object> mapEvents = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
+                List<Map<String, Object>> listOfMaps = (List<Map<String, Object>>) mapEvents.get("root");
+                for (Map<String, Object> obj : listOfMaps) {
+
+                    String Type=obj.get("typeName").toString();
+                     
+                   
+                    Types.add(Type);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+
+            }
+        });
+        //  return null;
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return Types;
+    }
+
+   
 }

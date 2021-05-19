@@ -53,6 +53,7 @@ import java.util.ArrayList;
 
 
 
+
 /**
  * The newsfeed form
  *
@@ -139,7 +140,7 @@ public class EventsAll extends BaseForm {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
-                new EventAdd(res).show();
+                new EventsAll(res).show();
                 refreshTheme();
             } catch (IOException ex) {
                
@@ -170,35 +171,11 @@ public class EventsAll extends BaseForm {
         addOrientationListener(e -> {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
         });
-        
-         ArrayList<Evenement> list = ServiceEvent.getInstance().displayEvents();
+        //Content
+         ArrayList<Evenement> list = ServiceEvent.getInstance().displayAllEvents();
 
-        for (Evenement E : list) {
-            String urlImage = "1 (19).jpg";
-            Image placeHolder = Image.createImage(12, 90);
-            EncodedImage enc = EncodedImage.createFromImage(placeHolder, false);
-            URLImage urlimg = URLImage.createToStorage(enc, urlImage, urlImage, URLImage.RESIZE_SCALE);
-            // addButton(null,E.getCodeP(),E.getReduction(),E.getDated(),E.getDatef());
-            // addButton(null,E.getCodeP(),E.getReduction(),E.getDated(),E.getDatef());
-            //addButton(placeHolder, E.getNiveau());
-            Image logo=null;
-            String ppt="";
-                   ppt="file://C:/xampp/php/www/ArtBox-CrashTest-WEB/public/imagesEvent/" + E.getImage_event();
-                   System.out.println(ppt);
-            
-                logo = Image.createImage(ppt).scaledHeight(500);
-           
-            
-            addButton(logo, E.getNom_event(), false, 26, 32);
-            
-            
-
-            ScaleImageLabel image = new ScaleImageLabel(urlimg);
-            Container containerImg = new Container();
-            image.setBackgroundType(Style.BACKGROUND_IMAGE_SCALED_FILL);
-
-        }
-       
+       ListEvents(list);
+       //Content 
        
     }
     
@@ -247,40 +224,81 @@ public class EventsAll extends BaseForm {
         swipe.addTab("", page1);
     }
     
-   private void addButton(Image img, String title, boolean liked, int likeCount, int commentCount) {
-       int height = Display.getInstance().convertToPixels(11.5f);
-       int width = Display.getInstance().convertToPixels(14f);
+   private void addButton(Image img, String title, String org, String dateHosted, String location,String description) {
+       int height = Display.getInstance().convertToPixels(40f);
+       int width = Display.getInstance().convertToPixels(60f);
        Button image = new Button(img.fill(width, height));
        image.setUIID("Label");
-       Container cnt = BorderLayout.west(image);
-       cnt.setLeadComponent(image);
-       TextArea ta = new TextArea(title);
-       ta.setUIID("NewsTopLine");
-       ta.setEditable(false);
-
-       Label likes = new Label(likeCount + " Likes  ", "NewsBottomLine");
-       likes.setTextPosition(RIGHT);
-       if(!liked) {
-           FontImage.setMaterialIcon(likes, FontImage.MATERIAL_FAVORITE);
-       } else {
-           Style s = new Style(likes.getUnselectedStyle());
-           s.setFgColor(0xff2d55);
-           FontImage heartImage = FontImage.createMaterial(FontImage.MATERIAL_FAVORITE, s);
-           likes.setIcon(heartImage);
-       }
-       Label comments = new Label(commentCount + " Comments", "NewsBottomLine");
-       FontImage.setMaterialIcon(likes, FontImage.MATERIAL_CHAT);
+       TextArea HostedBy = new TextArea(org+" is Hosting "+title);
+       HostedBy.setUIID("NewsTopLine");
+       HostedBy.setEditable(false);
+       HostedBy.getAllStyles().setAlignment(TextArea.CENTER);
+      HostedBy.getAllStyles().setPaddingTop(5);
+       HostedBy.getStyle().set3DText(true, true);
+         //HostedBy.getAllStyles().
+       Container cnt = BorderLayout.north(HostedBy);
+       cnt.setLeadComponent(HostedBy);
        
+        SpanLabel underTitle = new SpanLabel(description);
+      TextArea date = new TextArea("Happening "+dateHosted);
+      date.setUIID("NewsTopLine");
+       date.setEditable(false);
+       
+       //date.setTextPosition(RIGHT);
+       
+           Style s = new Style(date.getUnselectedStyle());
+           s.setFgColor(0xff2d55);
+         
+       
+      
+       TextArea locationTxt = new TextArea("At "+location);
+      locationTxt.setUIID("NewsTopLine");
+       locationTxt.setEditable(false);
        
        cnt.add(BorderLayout.CENTER, 
                BoxLayout.encloseY(
-                       ta,
-                       BoxLayout.encloseX(likes, comments)
+                       image,
+                       
+                       underTitle,
+                       BoxLayout.encloseX(date, locationTxt)
                ));
        add(cnt);
        image.addActionListener(e -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
    }
-    
+   
+   public void ListEvents(ArrayList<Evenement> list )
+   {
+    for (Evenement E : list) {
+            String urlImage = "1 (19).jpg";
+            Image placeHolder = Image.createImage(12, 90);
+            EncodedImage enc = EncodedImage.createFromImage(placeHolder, false);
+            URLImage urlimg = URLImage.createToStorage(enc, urlImage, urlImage, URLImage.RESIZE_SCALE);
+            // addButton(null,E.getId_org().getUsername(),false,0,0);
+            // addButton(null,E.getCodeP(),E.getReduction(),E.getDated(),E.getDatef());
+            //addButton(placeHolder, E.getNiveau());
+            Image logo=null;
+            String ppt="";
+                   ppt="file://C:/xampp/php/www/ArtBox-CrashTest-WEB/public/imagesEvent/" + E.getImage_event();
+                   System.out.println(ppt);
+            
+        try {
+            logo = Image.createImage(ppt).scaledHeight(500);
+        } catch (IOException ex) {
+           
+        }
+           
+            
+            addButton(logo, E.getNom_event(), E.getId_org().getUsername(), E.getDate_event(), E.getLocation_event(),E.getDescription());
+            
+            
+
+            ScaleImageLabel image = new ScaleImageLabel(urlimg);
+            Container containerImg = new Container();
+            image.setBackgroundType(Style.BACKGROUND_IMAGE_SCALED_FILL);
+   
+   
+   }
+   }
     private void bindButtonSelection(Button b, Label arrow) {
         b.addActionListener(e -> {
             if(b.isSelected()) {

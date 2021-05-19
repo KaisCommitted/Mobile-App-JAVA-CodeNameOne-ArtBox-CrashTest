@@ -32,6 +32,7 @@ import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.CN;
 import com.codename1.ui.CheckBox;
+import com.codename1.ui.ComboBox;
 import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import static com.codename1.ui.Component.BOTTOM;
@@ -71,6 +72,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -215,25 +217,32 @@ protected String saveFileToDevice(String hi, String ext) throws IOException {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
         });
         
-         ArrayList<Evenement> list = ServiceEvent.getInstance().displayEvents();
+        ;
 
       /*  Content */
         TextField tfName = new TextField("","Event Name");
          tfName.setUIID("TextFieldBalck");
          addStringValue("Event name", tfName);
          
-        TextField tfOrganizer= new TextField("","Event  Organizer");
-         tfOrganizer.setUIID("TextFieldBalck");
-         addStringValue("Event Organizer", tfOrganizer);
-        
-        
-        TextField tfType= new TextField("","Event  Type");
-         tfType.setUIID("TextFieldBalck");
-         addStringValue("Event Type", tfType);
+       
          
-        TextField tfCategorie= new TextField("","Event Genre");
-         tfCategorie.setUIID("TextFieldBalck");
-         addStringValue("Event Genre", tfCategorie);
+         
+         ComboBox comboCat = new ComboBox();
+         addStringValue("Event Genre", comboCat);
+        List<Categorie> listCat = ServiceEvent.getInstance().displayCats();
+        for (Categorie cat : listCat) { 
+            comboCat.addItem(cat.getCategorie_name());
+        }
+        
+        
+         ComboBox comboType = new ComboBox();
+         addStringValue("Event Type", comboType);
+        List<String> listType = ServiceEvent.getInstance().displayTypes();
+        for (String t : listType) { 
+            comboType.addItem(t);
+        }
+    
+        
         
         TextField tfDescription= new TextField("","Event Description");
          tfDescription.setUIID("TextFieldBalck");
@@ -256,7 +265,7 @@ protected String saveFileToDevice(String hi, String ext) throws IOException {
        CheckBox multiSelect = new CheckBox("Multi-Select");
 Button img1 = new  Button("Choose An Image");
 img1.setUIID("TextFieldBlack");
-         addStringValue("Event Date", img1);
+         addStringValue("Event Image", img1);
 img1.addActionListener((ActionEvent e) -> {
             if (FileChooser.isAvailable()) {
                 FileChooser.setOpenFilesInPlace(true);
@@ -335,25 +344,25 @@ img1.addActionListener((ActionEvent e) -> {
         btnAjouter.addActionListener((e) -> {
 
             try {
-                 if ((tfName.getText().length()==0)||(tfType.getText().length()==0)) {
+                 if ((tfName.getText().length()==0)) {
                     Dialog.show("Alert", "Please fill all the fields", new Command("OK"));
                 } else {
                     InfiniteProgress ip = new InfiniteProgress();
                     final Dialog iDialog = ip.showInfiniteBlocking();
-                   Categorie C = new Categorie(1, tfCategorie.getText());
+                   Categorie C = new Categorie(1, String.valueOf(comboCat.getSelectedItem()));
                         User CurrentUser = new User();
                         CurrentUser.setId_user(18);
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                         String date=""; 
                         date =format.format(datePicker.getDate());
-                         Evenement E = new Evenement(CurrentUser, date, tfName.getText(),tfType.getText(), C , tfDescription.getText(), Integer.parseInt(tfNbMax.getText()), Integer.parseInt(tfNbMax.getText()), path, tfLocation.getText());
+                         Evenement E = new Evenement(CurrentUser, date, tfName.getText(),String.valueOf(comboType.getSelectedItem()), C , tfDescription.getText(), Integer.parseInt(tfNbMax.getText()), Integer.parseInt(tfNbMax.getText()), path, tfLocation.getText());
                         
 
                     System.out.println("data E else gui" + E);
                     // calling adding fct in the services class
                     ServiceEvent.getInstance().addEvent(E);
                     iDialog.dispose(); //Remove LOADING after adding
-                    new EventsAll(res).show();
+                   // new EventsAll(res).show();
                     refreshTheme();
                 }
             } catch (Exception ex) {
