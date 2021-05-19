@@ -67,7 +67,16 @@ public class ServiceEvent {
         NetworkManager.getInstance().addToQueueAndWait(req);
         return resultOK;
     }
+     public ArrayList<Evenement> displayHasPassedEvents() {
 
+        String url = Statics.BASE_URL + "/evenement/json/displayHasPassedEvents";
+        return displayEvents(url);
+    }
+ public ArrayList<Evenement> displayThisWeekEvents() {
+
+        String url = Statics.BASE_URL + "/evenement/json/displayThisWeekEvents";
+        return displayEvents(url);
+    }
     public ArrayList<Evenement> displayAllEvents() {
 
         String url = Statics.BASE_URL + "/evenement/json/displayEvent";

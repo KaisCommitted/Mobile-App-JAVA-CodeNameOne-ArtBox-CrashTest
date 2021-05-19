@@ -61,14 +61,14 @@ import java.util.ArrayList;
  *
  * @author Shai Almog
  */
-public class EventsAll extends BaseForm {
+public class EventsThisWeek extends BaseForm {
 
-    public EventsAll(Resources res) throws IOException {
-        super("Events", BoxLayout.y());
+    public EventsThisWeek(Resources res) throws IOException {
+        super("", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Upcoming Events");
+        setTitle("This Week's Events");
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
@@ -119,7 +119,7 @@ public class EventsAll extends BaseForm {
         Component.setSameSize(radioContainer, spacer1, spacer2);
         add(LayeredLayout.encloseIn(swipe, radioContainer));
         
-       ButtonGroup barGroup = new ButtonGroup();
+        ButtonGroup barGroup = new ButtonGroup();
         RadioButton all = RadioButton.createToggle("Upcoming", barGroup);
         all.setUIID("SelectBar");
         RadioButton ThisWeek = RadioButton.createToggle("ThisWeek", barGroup);
@@ -178,14 +178,14 @@ public class EventsAll extends BaseForm {
                 FlowLayout.encloseBottom(arrow)
         ));
         
-        all.setSelected(true);
-      ThisWeek.setSelected(false);
+        all.setSelected(false);
+      ThisWeek.setSelected(true);
       HasPassed.setSelected(false);
         Host.setSelected(false);
         arrow.setVisible(false);
         addShowListener(e -> {
             arrow.setVisible(true);
-            updateArrowPosition(all, arrow);
+            updateArrowPosition(ThisWeek, arrow);
         });
         bindButtonSelection(all, arrow);
         bindButtonSelection(ThisWeek, arrow);
@@ -198,7 +198,7 @@ public class EventsAll extends BaseForm {
         });
         //Content
         
-         ArrayList<Evenement> list = ServiceEvent.getInstance().displayAllEvents();
+         ArrayList<Evenement> list = ServiceEvent.getInstance().displayThisWeekEvents();
 
        ListEvents(list,res);
        //Content 
@@ -276,7 +276,7 @@ delete.setAlignment(RIGHT);
                 //appel fct supp service
                 if (ServiceEvent.getInstance().deleteEvent(E.getId())) {
                     try {
-                        new EventsAll(res).show();
+                        new EventsThisWeek(res).show();
                     } catch (IOException ex) {
                        
                     }

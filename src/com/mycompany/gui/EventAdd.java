@@ -109,7 +109,7 @@ protected String saveFileToDevice(String hi, String ext) throws IOException {
     }
 
     public EventAdd(Resources res) throws IOException {
-        super("Events", BoxLayout.y());
+        super("Eventsssssssss", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
@@ -165,13 +165,35 @@ protected String saveFileToDevice(String hi, String ext) throws IOException {
         add(LayeredLayout.encloseIn(swipe, radioContainer));
         
         ButtonGroup barGroup = new ButtonGroup();
-        RadioButton all = RadioButton.createToggle("All", barGroup);
+        RadioButton all = RadioButton.createToggle("Upcoming", barGroup);
         all.setUIID("SelectBar");
-        RadioButton featured = RadioButton.createToggle("Featured", barGroup);
-        featured.setUIID("SelectBar");
-        RadioButton popular = RadioButton.createToggle("Popular", barGroup);
-        popular.setUIID("SelectBar");
+        RadioButton ThisWeek = RadioButton.createToggle("ThisWeek", barGroup);
+        ThisWeek.setUIID("SelectBar");
+        RadioButton HasPassed = RadioButton.createToggle("Has Passed", barGroup);
+        HasPassed.setUIID("SelectBar");
         RadioButton Host = RadioButton.createToggle("Host", barGroup);
+       
+        HasPassed.addActionListener((e) -> {
+            try {
+                InfiniteProgress ip = new InfiniteProgress();
+                final Dialog ipDlg = ip.showInifiniteBlocking();
+                new EventsHasPassed(res).show();
+                refreshTheme();
+            } catch (IOException ex) {
+               
+            }
+        });
+        
+        ThisWeek.addActionListener((e) -> {
+            try {
+                InfiniteProgress ip = new InfiniteProgress();
+                final Dialog ipDlg = ip.showInifiniteBlocking();
+                new EventsThisWeek(res).show();
+                refreshTheme();
+            } catch (IOException ex) {
+               
+            }
+        });
         
          Host.addActionListener((e) -> {
             try {
@@ -180,28 +202,30 @@ protected String saveFileToDevice(String hi, String ext) throws IOException {
                 new EventAdd(res).show();
                 refreshTheme();
             } catch (IOException ex) {
-                
+               
             }
         });
-          all.addActionListener((e) -> {
+         all.addActionListener((e) -> {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
-                new EventsAll(res).show();
+                new EventsHasPassed(res).show();
                 refreshTheme();
             } catch (IOException ex) {
-                
+               
             }
         });
         Host.setUIID("SelectBar");
         Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
         
         add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(4, all, featured, popular, Host),
+                GridLayout.encloseIn(4, all, ThisWeek, HasPassed, Host),
                 FlowLayout.encloseBottom(arrow)
         ));
         
         all.setSelected(false);
+      ThisWeek.setSelected(false);
+      HasPassed.setSelected(false);
         Host.setSelected(true);
         arrow.setVisible(false);
         addShowListener(e -> {
@@ -209,8 +233,8 @@ protected String saveFileToDevice(String hi, String ext) throws IOException {
             updateArrowPosition(Host, arrow);
         });
         bindButtonSelection(all, arrow);
-        bindButtonSelection(featured, arrow);
-        bindButtonSelection(popular, arrow);
+        bindButtonSelection(ThisWeek, arrow);
+        bindButtonSelection(HasPassed, arrow);
         bindButtonSelection(Host, arrow);
         
         // special case for rotation
