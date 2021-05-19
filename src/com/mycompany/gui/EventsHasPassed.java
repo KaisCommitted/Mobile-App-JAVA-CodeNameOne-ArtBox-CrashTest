@@ -128,7 +128,7 @@ public class EventsHasPassed extends BaseForm {
         HasPassed.setUIID("SelectBar");
         RadioButton Host = RadioButton.createToggle("Host", barGroup);
        
-        HasPassed.addActionListener((e) -> {
+          HasPassed.addActionListener((e) -> {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
@@ -138,6 +138,7 @@ public class EventsHasPassed extends BaseForm {
                
             }
         });
+        
         
         ThisWeek.addActionListener((e) -> {
             try {
@@ -164,7 +165,7 @@ public class EventsHasPassed extends BaseForm {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
-                new EventsHasPassed(res).show();
+                new EventsAll(res).show();
                 refreshTheme();
             } catch (IOException ex) {
                
@@ -298,6 +299,7 @@ delete.setAlignment(RIGHT);
                
             }
         });*/
+        delete.setVisible(false);
        if (org.equals(CurrentUser.getUsername())){delete.setVisible(true);}
        Button image = new Button(img.fill(width, height));
        image.setUIID("Label");

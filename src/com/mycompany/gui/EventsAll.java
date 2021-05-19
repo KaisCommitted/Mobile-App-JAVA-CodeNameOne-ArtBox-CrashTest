@@ -37,6 +37,7 @@ import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
 import com.codename1.ui.Tabs;
 import com.codename1.ui.TextArea;
+import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.URLImage;
 import com.codename1.ui.layouts.BorderLayout;
@@ -128,7 +129,7 @@ public class EventsAll extends BaseForm {
         HasPassed.setUIID("SelectBar");
         RadioButton Host = RadioButton.createToggle("Host", barGroup);
        
-        HasPassed.addActionListener((e) -> {
+         HasPassed.addActionListener((e) -> {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
@@ -138,6 +139,7 @@ public class EventsAll extends BaseForm {
                
             }
         });
+        
         
         ThisWeek.addActionListener((e) -> {
             try {
@@ -164,7 +166,7 @@ public class EventsAll extends BaseForm {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
-                new EventsHasPassed(res).show();
+                new EventsAll(res).show();
                 refreshTheme();
             } catch (IOException ex) {
                
@@ -197,6 +199,25 @@ public class EventsAll extends BaseForm {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
         });
         //Content
+        
+        /*
+        Search
+        
+        TextField Search = new TextField();
+        Style SearchStyle = new Style(Search.getUnselectedStyle());
+        SearchStyle.setFgColor(0xf21f21);
+        FontImage SearchImage = FontImage.createMaterial(FontImage.MATERIAL_SEARCH, SearchStyle);
+        
+        Button S = new Button(SearchImage);
+         Container cn = BorderLayout.north(all);
+       cn.setLeadComponent(all);
+       cn.add(BorderLayout.CENTER, 
+               BoxLayout.encloseY(
+                       
+                       BoxLayout.encloseX(Search, S)
+               ));
+       
+       add(cn);*/
         
          ArrayList<Evenement> list = ServiceEvent.getInstance().displayAllEvents();
 
@@ -256,7 +277,7 @@ public class EventsAll extends BaseForm {
       
        
        
-       Label delete = new Label("Delete my Event");
+       Button delete = new Button();
 
         delete.setUIID("NewsTopLine");
         Style supprimerStyle = new Style(delete.getUnselectedStyle());
@@ -264,25 +285,32 @@ public class EventsAll extends BaseForm {
 
         FontImage supprimerImage = FontImage.createMaterial(FontImage.MATERIAL_DELETE, supprimerStyle);
         delete.setIcon(supprimerImage);
-        delete.setTextPosition(RIGHT);
+       
 delete.setAlignment(RIGHT);
         //Onclick delete btn
-        delete.addPointerPressedListener(l -> {
-            Dialog dig = new Dialog("Delete");
-            if (dig.show("Delete", "Are you sure you want to delete this event?", "Cancel", "Yes")) {
-                dig.dispose();
-            } else {
-                dig.dispose();
-                //appel fct supp service
-                if (ServiceEvent.getInstance().deleteEvent(E.getId())) {
-                    try {
-                        new EventsAll(res).show();
-                    } catch (IOException ex) {
-                       
-                    }
-                }
+        delete.addActionListener( (e) -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
+                
+                
+                
+                /*.addActionListener(l -> {
+            System.out.println("Im innnnn");
+                       ToastBar.getInstance().setPosition(BOTTOM);
+                    ToastBar.Status status = ToastBar.getInstance().createStatus();
+                    status.setShowProgressIndicator(true);
+                    status.setIcon(res.getImage("nour.png").scaledSmallerRatio(Display.getInstance().getDisplayWidth() / 10, Display.getInstance().getDisplayWidth() / 15));
+                    status.setMessage("Contenu supprimé avec sucées");
+                    status.setExpires(30000);  // only show the status for 3 seconds, then have it automatically clear
+                    status.show();
+                        if (ServiceEvent.getInstance().deleteEvent(E.getId())) {
+                            try {
+                                new EventsAll(res).show();
+                            } catch (IOException ex) {
+
+                            }
+                        
             }
         });
+                */
        /*TextArea delete = new TextArea("Delete my event");
        delete.setUIID("NewsTopLine");
        delete.setEditable(false);
@@ -298,6 +326,7 @@ delete.setAlignment(RIGHT);
                
             }
         });*/
+        delete.setVisible(false);
        if (org.equals(CurrentUser.getUsername())){delete.setVisible(true);}
        Button image = new Button(img.fill(width, height));
        image.setUIID("Label");

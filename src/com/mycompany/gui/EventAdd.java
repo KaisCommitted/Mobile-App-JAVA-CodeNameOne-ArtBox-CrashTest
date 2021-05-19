@@ -184,6 +184,7 @@ protected String saveFileToDevice(String hi, String ext) throws IOException {
             }
         });
         
+        
         ThisWeek.addActionListener((e) -> {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
@@ -209,7 +210,7 @@ protected String saveFileToDevice(String hi, String ext) throws IOException {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
-                new EventsHasPassed(res).show();
+                new EventsAll(res).show();
                 refreshTheme();
             } catch (IOException ex) {
                
@@ -386,7 +387,9 @@ img1.addActionListener((ActionEvent e) -> {
                     // calling adding fct in the services class
                     ServiceEvent.getInstance().addEvent(E);
                     iDialog.dispose(); //Remove LOADING after adding
+                   ToastBar.showMessage("Event sucessfully added", FontImage.MATERIAL_INFO);
                    // new EventsAll(res).show();
+               
                     refreshTheme();
                 }
             } catch (Exception ex) {
@@ -473,6 +476,7 @@ img1.addActionListener((ActionEvent e) -> {
                        ta,
                        BoxLayout.encloseX(likes, comments)
                ));
+       
        add(cnt);
        image.addActionListener(e -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
    }

@@ -84,21 +84,23 @@ public class BaseForm extends Form {
                         new Label(res.getImage("profile-pic.jpg"), "PictureWhiteBackgrond"))
         ));
         
-        tb.addMaterialCommandToSideMenu("Newsfeed", FontImage.MATERIAL_UPDATE, e -> {
-            try {
-                new EventsAll(res).show();
-            } catch (IOException ex) {
-                
-            }
-        });
-        tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_SETTINGS, e -> new UserProfile(res).show());
-        tb.addMaterialCommandToSideMenu("Postes", FontImage.MATERIAL_ADB, e -> {
+         tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_SETTINGS, e -> new UserProfile(res).show());
+       
+        tb.addMaterialCommandToSideMenu("Newsfeed", FontImage.MATERIAL_ADB, e -> {
             try {
                 new PostesAll(res).show();
             } catch (IOException ex) {
                 
             }
         });
+         tb.addMaterialCommandToSideMenu("Events", FontImage.MATERIAL_UPDATE, e -> {
+            try {
+                new EventsAll(res).show();
+            } catch (IOException ex) {
+                
+            }
+        });
+       
         tb.addMaterialCommandToSideMenu("Logout", FontImage.MATERIAL_EXIT_TO_APP, e -> new WalkthruForm(res).show());
          
     }
