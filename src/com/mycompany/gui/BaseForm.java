@@ -92,7 +92,13 @@ public class BaseForm extends Form {
             }
         });
         tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_SETTINGS, e -> new UserProfile(res).show());
-        tb.addMaterialCommandToSideMenu("Announcements", FontImage.MATERIAL_ADB, e -> new UserProfile(res).show());
+        tb.addMaterialCommandToSideMenu("Postes", FontImage.MATERIAL_ADB, e -> {
+            try {
+                new PostesAll(res).show();
+            } catch (IOException ex) {
+                
+            }
+        });
         tb.addMaterialCommandToSideMenu("Logout", FontImage.MATERIAL_EXIT_TO_APP, e -> new WalkthruForm(res).show());
          
     }
