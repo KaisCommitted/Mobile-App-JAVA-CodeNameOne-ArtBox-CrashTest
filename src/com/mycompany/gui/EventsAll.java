@@ -390,6 +390,7 @@ delete.setAlignment(RIGHT);
                         
             }
         );
+       id.setVisible(false);
          delete.setVisible(false);
        if (org.equals(CurrentUser.getUsername())){delete.setVisible(true);}
        image.addActionListener(e -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));

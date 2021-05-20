@@ -4,11 +4,6 @@
  * and open the template in the editor.
  */
 package com.mycompany.gui;
-
-
-
-
-
 import com.codename1.components.InfiniteProgress;
 import com.codename1.components.ScaleImageLabel;
 import com.codename1.components.SpanLabel;
@@ -16,6 +11,10 @@ import com.codename1.components.ToastBar;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Component;
+import static com.codename1.ui.Component.BOTTOM;
+import static com.codename1.ui.Component.CENTER;
+import static com.codename1.ui.Component.LEFT;
+import static com.codename1.ui.Component.RIGHT;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
@@ -36,30 +35,19 @@ import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
-import com.mycompany.entities.Evenement;
 import com.mycompany.entities.Post;
-import java.io.IOException;
-import java.util.ArrayList;
 import com.mycompany.services.ServicePoste;
 import static com.mycompany.utils.Statics.CurrentUser;
-
-
-
-
-
-
-
-
-
-
+import java.io.IOException;
+import java.util.ArrayList;
 /**
  *
  * @author Adam Khalfaoui
  */
-public class PostesAll extends BaseForm  {
+public class displayNew extends BaseForm{
     
-    public PostesAll(Resources res) throws IOException {
-        super("Postes", BoxLayout.y());
+    public displayNew(Resources res) throws IOException {
+       super("Postes", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
@@ -117,13 +105,8 @@ public class PostesAll extends BaseForm  {
         ButtonGroup barGroup = new ButtonGroup();
         RadioButton all = RadioButton.createToggle("All", barGroup);
         all.setUIID("SelectBar");
-
         RadioButton neww = RadioButton.createToggle("New", barGroup);
         neww.setUIID("SelectBar");
-
-        RadioButton featured = RadioButton.createToggle("New", barGroup);
-        featured.setUIID("SelectBar");
-
         RadioButton popular = RadioButton.createToggle("Popular", barGroup);
         popular.setUIID("SelectBar");
         RadioButton Host = RadioButton.createToggle("Add Post", barGroup);
@@ -171,7 +154,7 @@ public class PostesAll extends BaseForm  {
                
             }
         });
-         
+          
         Host.setUIID("SelectBar");
         Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
         
@@ -186,7 +169,7 @@ public class PostesAll extends BaseForm  {
         arrow.setVisible(false);
         addShowListener(e -> {
             arrow.setVisible(true);
-            updateArrowPosition(all, arrow);
+            updateArrowPosition(neww, arrow);
         });
         bindButtonSelection(all, arrow);
         bindButtonSelection(neww, arrow);
@@ -198,7 +181,7 @@ public class PostesAll extends BaseForm  {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
         });
      
-          ArrayList<Post> list = ServicePoste.getInstance().displayPostes();
+          ArrayList<Post> list = ServicePoste.getInstance().displayNew();
 
         for (Post P : list) {
             String urlImage = "44ebdde27745ae31cd2cbc45fa3e9985).jpg";
@@ -216,8 +199,7 @@ public class PostesAll extends BaseForm  {
                 logo = Image.createImage(ppt).scaledHeight(500);
            
             
-            addButton(logo, P.getNom_post(), false, P.getLikes(), 32,P.getId_user().getUsername(), P.getId_post(),res);
-            System.out.println("\n\n id "+ P.getId_user().getUsername());
+            addButton(logo, P.getNom_post(), false, P.getLikes(), 32);
             
             
 
@@ -276,7 +258,7 @@ public class PostesAll extends BaseForm  {
     }
     
    
-    private void addButton(Image img, String title, boolean liked, int likeCount, int commentCount,String org,int id_p,Resources res) {
+    private void addButton(Image img, String title, boolean liked, int likeCount, int commentCount) {
        int height = Display.getInstance().convertToPixels(11.5f);
        int width = Display.getInstance().convertToPixels(14f);
        Button image = new Button(img.fill(width, height));
@@ -287,46 +269,6 @@ public class PostesAll extends BaseForm  {
        ta.setUIID("NewsTopLine");
        ta.setEditable(false);
 
-               Label lSupprimer = new Label("  ");
-        lSupprimer.setUIID("NewTopLine2");
-        Style SupprimerStyle = new Style(lSupprimer.getUnselectedStyle());
-        SupprimerStyle.setFgColor(0xf21f1f);
-        
-        FontImage suppromerImage = FontImage.createMaterial(FontImage.MATERIAL_DELETE, SupprimerStyle);
-        lSupprimer.setIcon(suppromerImage);
-        lSupprimer.setTextPosition(RIGHT);
-       
-       
-                lSupprimer.setVisible(false);
-       if (org.equals(CurrentUser.getUsername()) ){
-           
-          
-           
-           lSupprimer.setVisible(true);}
-
-
-               lSupprimer.addPointerPressedListener(l -> {
-           Dialog digSupp = new Dialog("Suppression");
-           
-           if(digSupp.show("Suppression","Vous voulez supprimer cet utilisateur ?","Annuler","Oui")){
-               digSupp.dispose();
-           }
-           else{
-               digSupp.dispose();;
-               
-               //lenna apprel mtaa fonction delete
-               if(ServicePoste.getInstance().deletePost(id_p)){
-                   //new ListUtilisateurForm(res);
-                  //new PostesAll(res).show();
-                  // new PosteAll(res).show();
-                
-                refreshTheme();
-                   System.out.println("\n\n poost deleted");
-               }
-           }
-       });
-
-        
        Label likes = new Label(likeCount + " Likes  ", "NewsBottomLine");
        likes.setTextPosition(RIGHT);
        if(!liked) {
@@ -345,10 +287,9 @@ public class PostesAll extends BaseForm  {
                BoxLayout.encloseY(
                        ta,
                        BoxLayout.encloseX(likes, comments)
-                       
                ));
-       addAll(cnt,lSupprimer);
-      // image.addActionListener(e -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
+       add(cnt);
+       image.addActionListener(e -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
    }
     
     private void bindButtonSelection(Button b, Label arrow) {
@@ -358,7 +299,6 @@ public class PostesAll extends BaseForm  {
             }
         });
     }
-    
     
     
     

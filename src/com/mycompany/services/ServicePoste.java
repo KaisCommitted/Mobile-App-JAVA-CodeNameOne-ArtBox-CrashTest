@@ -81,12 +81,33 @@ public class ServicePoste {
         return Cats;
     }
     
-    
+
     public ArrayList<Categorie> displayCats() {
 
         String url = Statics.BASE_URL + "/categorie/json/displayCat";
         return displayCat(url);
     }
+    
+    
+     public ArrayList<Post> displayNew() {
+
+        String url = Statics.BASE_URL + "/postes/json/displayNew";
+        return displayPostes(url);
+    }
+    
+    public ArrayList<Post> displaylike() {
+
+        String url = Statics.BASE_URL + "/postes/json/displaylike";
+        return displayPostes(url);
+    }
+    public ArrayList<Post> displayPostes() {
+
+        String url = Statics.BASE_URL + "/postes/json/displayPostes";
+        return displayPostes(url);
+    }
+    
+
+   
     
      public boolean addPoste(Post P) {
 
@@ -110,9 +131,9 @@ public class ServicePoste {
     
     
     
-    public ArrayList<Post>displayPostes() {
+    public ArrayList<Post>displayPostes(String url) {
         ArrayList<Post> postes = new ArrayList<>();
-        String url = Statics.BASE_URL + "/postes/json/displayPostes";
+       
         req.setUrl(url);
         req.addResponseListener((NetworkEvent evt) -> {
             JSONParser jsonp;
@@ -167,7 +188,26 @@ public class ServicePoste {
     
     
     
-    
+     public boolean deletePost(int id){
+        String url =Statics.BASE_URL+"/postes/json/deletePostesj/?idPost="+id;
+        //http://127.0.0.1:8000/postes/json/deletePostesj/?idPost=15
+        
+        req.setUrl(url);
+        
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+        
+                req.removeResponseCodeListener(this);
+                
+            }
+        });
+        
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        
+        return resultOK;
+        
+    }
     
     
     

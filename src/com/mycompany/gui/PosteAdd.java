@@ -188,6 +188,19 @@ public class PosteAdd extends BaseForm{
                 
             }
         });
+
+          featured.addActionListener((e) -> {
+            try {
+                InfiniteProgress ip = new InfiniteProgress();
+                final Dialog ipDlg = ip.showInifiniteBlocking();
+                new displayNew(res).show();
+                refreshTheme();
+            } catch (IOException ex) {
+                
+            }
+        });
+          
+
         Host.setUIID("SelectBar");
         Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
         
