@@ -56,6 +56,24 @@ public class Post {
         
     }
    
+    
+    public Post(User id_user,String nom_post,Categorie categorie,String Description,String file) {
+        
+        this.nom_post = nom_post;
+        this.Description = Description;
+        this.categorie = categorie;
+        //this.post_date = post_date;
+        this.file = file;
+        this.id_user = id_user;
+        
+        
+        
+    }
+    
+    
+    
+    
+    
     public void setId_user(User id_user) {
         this.id_user = id_user;
     }

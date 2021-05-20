@@ -32,9 +32,9 @@ public class ServiceEvent {
 
     public static ServiceEvent instance = null;
     public boolean resultOK;
-    private ConnectionRequest req;
+    public ConnectionRequest req;
 
-    private ServiceEvent() {
+    public ServiceEvent() {
         req = new ConnectionRequest();
     }
 
@@ -213,7 +213,7 @@ public class ServiceEvent {
      
      
       public boolean deleteEvent(int id) {
-        String url = Statics.BASE_URL + "evenement/json/deleteEvent?id=" + id;
+        String url = Statics.BASE_URL + "/evenement/json/deleteEvent?id=" + id;
         req.setUrl(url);
         req.addResponseListener(new ActionListener<NetworkEvent>() {
             @Override

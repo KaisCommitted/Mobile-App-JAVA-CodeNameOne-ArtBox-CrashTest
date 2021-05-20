@@ -116,17 +116,17 @@ public class PostesAll extends BaseForm  {
         ButtonGroup barGroup = new ButtonGroup();
         RadioButton all = RadioButton.createToggle("All", barGroup);
         all.setUIID("SelectBar");
-        RadioButton featured = RadioButton.createToggle("Featured", barGroup);
+        RadioButton featured = RadioButton.createToggle("New", barGroup);
         featured.setUIID("SelectBar");
         RadioButton popular = RadioButton.createToggle("Popular", barGroup);
         popular.setUIID("SelectBar");
-        RadioButton Host = RadioButton.createToggle("Host", barGroup);
+        RadioButton Host = RadioButton.createToggle("Add Post", barGroup);
         
          Host.addActionListener((e) -> {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
-                new EventAdd(res).show();
+                new PosteAdd(res).show();
                 refreshTheme();
             } catch (IOException ex) {
                
@@ -136,7 +136,7 @@ public class PostesAll extends BaseForm  {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
-                new EventAdd(res).show();
+                new PosteAdd(res).show();
                 refreshTheme();
             } catch (IOException ex) {
                
