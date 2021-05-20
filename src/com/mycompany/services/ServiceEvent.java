@@ -32,9 +32,9 @@ public class ServiceEvent {
 
     public static ServiceEvent instance = null;
     public boolean resultOK;
-    private ConnectionRequest req;
+    public ConnectionRequest req;
 
-    private ServiceEvent() {
+    public ServiceEvent() {
         req = new ConnectionRequest();
     }
 

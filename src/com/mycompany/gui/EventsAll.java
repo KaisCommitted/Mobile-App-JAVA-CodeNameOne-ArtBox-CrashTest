@@ -50,8 +50,10 @@ import com.codename1.ui.util.Resources;
 import com.mycompany.entities.Evenement;
 import com.mycompany.services.ServiceEvent;
 import static com.mycompany.utils.Statics.CurrentUser;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 
 
@@ -128,7 +130,22 @@ public class EventsAll extends BaseForm {
         RadioButton HasPassed = RadioButton.createToggle("Has Passed", barGroup);
         HasPassed.setUIID("SelectBar");
         RadioButton Host = RadioButton.createToggle("Host", barGroup);
+        RadioButton Statistics = RadioButton.createToggle("Statistics", barGroup);
+        Statistics.setUIID("SelectBar");
        
+          Statistics.addActionListener((e) -> {
+           
+                InfiniteProgress ip = new InfiniteProgress();
+                final Dialog ipDlg = ip.showInifiniteBlocking();
+                new StatBlog(res).show();
+                refreshTheme();
+           
+               
+            
+        });
+        
+        
+        
          HasPassed.addActionListener((e) -> {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
@@ -153,14 +170,19 @@ public class EventsAll extends BaseForm {
         });
         
          Host.addActionListener((e) -> {
-            try {
+           
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
+            try {
                 new EventAdd(res).show();
-                refreshTheme();
             } catch (IOException ex) {
                
             }
+                  
+                          refreshTheme();
+           
+               
+            
         });
          all.addActionListener((e) -> {
             try {
@@ -176,7 +198,7 @@ public class EventsAll extends BaseForm {
         Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
         
         add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(4, all, ThisWeek, HasPassed, Host),
+                GridLayout.encloseIn(4, all, ThisWeek, HasPassed, Host,Statistics),
                 FlowLayout.encloseBottom(arrow)
         ));
         
@@ -275,7 +297,7 @@ public class EventsAll extends BaseForm {
        int height = Display.getInstance().convertToPixels(40f);
        int width = Display.getInstance().convertToPixels(60f);
       
-       
+     
        
        Button delete = new Button();
 
