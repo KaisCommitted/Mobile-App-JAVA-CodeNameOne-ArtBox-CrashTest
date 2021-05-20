@@ -9,13 +9,27 @@ package com.mycompany.gui;
 
 
 
+
 import com.codename1.components.InfiniteProgress;
 import com.codename1.components.ScaleImageLabel;
 import com.codename1.components.SpanLabel;
 import com.codename1.components.ToastBar;
+import com.codename1.ext.filechooser.FileChooser;
+
+import com.codename1.io.FileSystemStorage;
+import com.codename1.io.Log;
+import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
+import com.codename1.ui.CN;
+import com.codename1.ui.CheckBox;
+import com.codename1.ui.ComboBox;
+import com.codename1.ui.Command;
 import com.codename1.ui.Component;
+import static com.codename1.ui.Component.BOTTOM;
+import static com.codename1.ui.Component.CENTER;
+import static com.codename1.ui.Component.LEFT;
+import static com.codename1.ui.Component.RIGHT;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
@@ -27,22 +41,31 @@ import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
 import com.codename1.ui.Tabs;
 import com.codename1.ui.TextArea;
+import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.URLImage;
+import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
+import com.codename1.ui.spinner.Picker;
+import com.codename1.ui.util.ImageIO;
 import com.codename1.ui.util.Resources;
-import com.mycompany.entities.Evenement;
+import com.mycompany.entities.Categorie;
 import com.mycompany.entities.Post;
+import com.mycompany.entities.User;
+import com.mycompany.services.ServiceEvent;
+import static com.mycompany.utils.Statics.CurrentUser;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 import com.mycompany.services.ServicePoste;
-
-
 
 
 
@@ -55,14 +78,37 @@ import com.mycompany.services.ServicePoste;
  *
  * @author Adam Khalfaoui
  */
-public class PostesAll extends BaseForm  {
+public class PosteAdd extends BaseForm{
     
-    public PostesAll(Resources res) throws IOException {
+       String path="";
+    String imgpath="";
+    
+    
+    
+    
+    protected String saveFileToDevice(String hi, String ext) throws IOException {
+        URI uri;
+        try {
+            uri = new URI(hi);
+            String path = uri.getPath();
+            int index = hi.lastIndexOf("/");
+            hi = hi.substring(index + 1);
+             imgpath=hi;
+            return hi;
+        } catch (URISyntaxException ex) {
+        }
+        int index = hi.lastIndexOf("/");
+            hi = hi.substring(index + 1);
+            imgpath=hi;
+        return hi;
+    }
+
+    public PosteAdd(Resources res) throws IOException {
         super("Postes", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("News Feed");
+        setTitle("Add Poste");
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
@@ -120,7 +166,7 @@ public class PostesAll extends BaseForm  {
         featured.setUIID("SelectBar");
         RadioButton popular = RadioButton.createToggle("Popular", barGroup);
         popular.setUIID("SelectBar");
-        RadioButton Host = RadioButton.createToggle("Add Post", barGroup);
+        RadioButton Host = RadioButton.createToggle("Add post", barGroup);
         
          Host.addActionListener((e) -> {
             try {
@@ -129,17 +175,17 @@ public class PostesAll extends BaseForm  {
                 new PosteAdd(res).show();
                 refreshTheme();
             } catch (IOException ex) {
-               
+                
             }
         });
-         all.addActionListener((e) -> {
+          all.addActionListener((e) -> {
             try {
                 InfiniteProgress ip = new InfiniteProgress();
                 final Dialog ipDlg = ip.showInifiniteBlocking();
-                new PosteAdd(res).show();
+                new PostesAll(res).show();
                 refreshTheme();
             } catch (IOException ex) {
-               
+                
             }
         });
         Host.setUIID("SelectBar");
@@ -150,13 +196,12 @@ public class PostesAll extends BaseForm  {
                 FlowLayout.encloseBottom(arrow)
         ));
         
-        all.setSelected(true);
-      
-        Host.setSelected(false);
+        all.setSelected(false);
+        Host.setSelected(true);
         arrow.setVisible(false);
         addShowListener(e -> {
             arrow.setVisible(true);
-            updateArrowPosition(all, arrow);
+            updateArrowPosition(Host, arrow);
         });
         bindButtonSelection(all, arrow);
         bindButtonSelection(featured, arrow);
@@ -167,36 +212,149 @@ public class PostesAll extends BaseForm  {
         addOrientationListener(e -> {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
         });
-     
-          ArrayList<Post> list = ServicePoste.getInstance().displayPostes();
+        
+        ;
 
-        for (Post P : list) {
-            String urlImage = "44ebdde27745ae31cd2cbc45fa3e9985).jpg";
-            Image placeHolder = Image.createImage(12, 90);
-            EncodedImage enc = EncodedImage.createFromImage(placeHolder, false);
-            URLImage urlimg = URLImage.createToStorage(enc, urlImage, urlImage, URLImage.RESIZE_SCALE);
-            // addButton(null,E.getCodeP(),E.getReduction(),E.getDated(),E.getDatef());
-            // addButton(null,E.getCodeP(),E.getReduction(),E.getDated(),E.getDatef());
-            //addButton(placeHolder, E.getNiveau());
-            Image logo=null;
-            String ppt="";
-                   ppt="file://C:/xampp/php/www/ArtBox-CrashTest-WEB/public/Postes/" + P.getFile();
-                   System.out.println(ppt);
-            
-                logo = Image.createImage(ppt).scaledHeight(500);
-           
-            
-            addButton(logo, P.getNom_post(), false, 26, 32);
-            
-            
-
-            ScaleImageLabel image = new ScaleImageLabel(urlimg);
-            Container containerImg = new Container();
-            image.setBackgroundType(Style.BACKGROUND_IMAGE_SCALED_FILL);
-
+      /*  Content */
+        TextField tfName = new TextField("","Poste Name");
+         tfName.setUIID("TextFieldBalck");
+         addStringValue("Poste Name", tfName);
+         
+       
+         
+         
+         ComboBox comboCat = new ComboBox();
+         addStringValue("Poste Genre", comboCat);
+        List<Categorie> listCat = ServicePoste.getInstance().displayCats();
+        for (Categorie cat : listCat) { 
+            comboCat.addItem(cat.getCategorie_name());
         }
-       
-       
+        
+     
+        
+        TextField tfDescription= new TextField("","Poste Description");
+         tfDescription.setUIID("TextFieldBalck");
+         addStringValue("Poste Description", tfDescription);
+        
+        
+        
+        
+         
+         Picker datePicker =new Picker();
+         datePicker.setType(Display.PICKER_TYPE_DATE);
+         
+         datePicker.setUIID("TextFieldBlack");
+         addStringValue("Poste Date", datePicker);
+         
+       CheckBox multiSelect = new CheckBox("Multi-Select");
+Button img1 = new  Button("Choose An Image");
+img1.setUIID("TextFieldBlack");
+         addStringValue("Poste Image", img1);
+img1.addActionListener((ActionEvent e) -> {
+            if (FileChooser.isAvailable()) {
+                FileChooser.setOpenFilesInPlace(true);
+                FileChooser.showOpenDialog(multiSelect.isSelected(), ".jpg, .jpeg, .png/plain", (ActionEvent e2) -> {
+                    if (e2 == null || e2.getSource() == null) {
+                        add("No file was selected");
+                        revalidate();
+                        return;
+                    }
+                    if (multiSelect.isSelected()) {
+                        String[] paths = (String[]) e2.getSource();
+                        for (String path : paths) {
+                            System.out.println(path);
+                            CN.execute(path);
+                        }
+                        return;
+                    }
+
+                    String file = (String) e2.getSource();
+                    if (file == null) {
+                        add("No file was selected");
+                        revalidate();
+                    } else {
+                        Image logo;
+
+                        try {
+                            logo = Image.createImage(file).scaledHeight(500);
+                            
+                            add(logo);
+                          img1.setEnabled(false);
+                           int index = file.lastIndexOf("/");
+            imgpath = file.substring(index + 1);
+                          img1.setText(imgpath);
+                            String imageFile = FileSystemStorage.getInstance().getAppHomePath() + "photo.png";
+
+                            try (OutputStream os = FileSystemStorage.getInstance().openOutputStream(imageFile)) {
+                                System.out.println(imageFile);
+                                ImageIO.getImageIO().save(logo, os, ImageIO.FORMAT_PNG, 1);
+                            } catch (IOException err) {
+                            }
+                        } catch (IOException ex) {
+                        }
+
+                        String extension = null;
+                        if (file.lastIndexOf(".") > 0) {
+                            try {
+                                extension = file.substring(file.lastIndexOf(".") + 1);
+                                StringBuilder hi = new StringBuilder(file);
+                                if (file.startsWith("file://")) {
+                                    hi.delete(0, 7);
+                                }
+                                int lastIndexPeriod = hi.toString().lastIndexOf(".");
+                                Log.p(hi.toString());
+                                String ext = hi.toString().substring(lastIndexPeriod);
+                                String hmore = hi.toString().substring(0, lastIndexPeriod - 1);
+                                String namePic = saveFileToDevice(file, ext);
+                                System.out.println(namePic);
+                                path=namePic;
+                                System.out.println("File  \n\n"+file);
+                                revalidate();
+                            } catch (IOException ex) {
+                               
+                            }
+
+                        
+                    }
+                    }
+                        });
+            }
+                });
+
+
+
+        Button btnAjouter = new Button("Add");
+        addStringValue("", btnAjouter);
+        btnAjouter.addActionListener((e) -> {
+
+            try {
+                 if ((tfName.getText().length()==0)) {
+                    Dialog.show("Alert", "Please fill all the fields", new Command("OK"));
+                } else {
+                    InfiniteProgress ip = new InfiniteProgress();
+                    final Dialog iDialog = ip.showInfiniteBlocking();
+                   Categorie C = new Categorie(1, String.valueOf(comboCat.getSelectedItem()));
+                        
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        String date=""; 
+                        date =format.format(datePicker.getDate());
+                         Post P = new Post(CurrentUser, tfName.getText(),C , tfDescription.getText(), path);
+                        
+
+                    System.out.println("data P else gui" + P);
+                    // calling adding fct in the services class
+                    ServicePoste.getInstance().addPoste(P);
+                    iDialog.dispose(); //Remove LOADING after adding
+                   // new EventsAll(res).show();
+                    refreshTheme();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.err.println("erreur!!! ");
+            }
+
+        });
+       /* content */
     }
     
     private void updateArrowPosition(Button b, Label arrow) {
@@ -285,6 +443,14 @@ public class PostesAll extends BaseForm  {
             }
         });
     }
+        private void addStringValue(String s, Component v) {
+        add(BorderLayout.west(new Label(s, "PaddedLabel")).add(BorderLayout.CENTER, v));
+        add(createLineSeparator(0xeeeeee));
+    }
+    
+    
+    
+    
     
     
     

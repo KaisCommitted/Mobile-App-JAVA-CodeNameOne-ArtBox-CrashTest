@@ -18,7 +18,7 @@ import com.mycompany.entities.Post;
 import com.mycompany.entities.User;
 import com.mycompany.utils.Statics;
 import java.io.IOException;
-
+import com.mycompany.entities.Categorie;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +52,61 @@ public class ServicePoste {
     }
     
     
+     public ArrayList<Categorie> displayCat(String url) {
+        ArrayList<Categorie> Cats = new ArrayList<>();
+
+        req.setUrl(url);
+        req.addResponseListener((NetworkEvent evt) -> {
+            JSONParser jsonp;
+            jsonp = new JSONParser();
+
+            try {
+                Map<String, Object> mapEvents = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
+                List<Map<String, Object>> listOfMaps = (List<Map<String, Object>>) mapEvents.get("root");
+                for (Map<String, Object> obj : listOfMaps) {
+
+                    Categorie Cat = new Categorie();
+
+                    Cat.setCategorie_name(obj.get("categorieName").toString());
+                    Cat.setCategorie_image(obj.get("categorieImage").toString());
+                    Cats.add(Cat);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+
+            }
+        });
+        //  return null;
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return Cats;
+    }
     
     
+    public ArrayList<Categorie> displayCats() {
+
+        String url = Statics.BASE_URL + "/categorie/json/displayCat";
+        return displayCat(url);
+    }
+    
+     public boolean addPoste(Post P) {
+
+        String url = Statics.BASE_URL + "/postes/json/addPoste?NomPost=" + P.getNom_post()
+                + "&description=" + P.getDescription()          
+                + "&categorie=" + P.getCategorie().getCategorie_name()
+                + "&idUser=" + P.getid_user().getId_user()
+                + "&posteDate=" + P.getPost_date()
+                + "&file=" + P.getFile(); //création de l'URL
+        req.setUrl(url);// Insertion de l'URL de notre demande de connexion
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200;
+                req.removeResponseListener(this);
+            }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+    }
     
     
     
