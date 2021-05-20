@@ -213,7 +213,7 @@ public class ServiceEvent {
      
      
       public boolean deleteEvent(int id) {
-        String url = Statics.BASE_URL + "evenement/json/deleteEvent?id=" + id;
+        String url = Statics.BASE_URL + "/evenement/json/deleteEvent?id=" + id;
         req.setUrl(url);
         req.addResponseListener(new ActionListener<NetworkEvent>() {
             @Override

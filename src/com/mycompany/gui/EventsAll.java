@@ -310,29 +310,7 @@ public class EventsAll extends BaseForm {
        
 delete.setAlignment(RIGHT);
         //Onclick delete btn
-        delete.addActionListener( (e) -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
-                
-                
-                
-                /*.addActionListener(l -> {
-            System.out.println("Im innnnn");
-                       ToastBar.getInstance().setPosition(BOTTOM);
-                    ToastBar.Status status = ToastBar.getInstance().createStatus();
-                    status.setShowProgressIndicator(true);
-                    status.setIcon(res.getImage("nour.png").scaledSmallerRatio(Display.getInstance().getDisplayWidth() / 10, Display.getInstance().getDisplayWidth() / 15));
-                    status.setMessage("Contenu supprimé avec sucées");
-                    status.setExpires(30000);  // only show the status for 3 seconds, then have it automatically clear
-                    status.show();
-                        if (ServiceEvent.getInstance().deleteEvent(E.getId())) {
-                            try {
-                                new EventsAll(res).show();
-                            } catch (IOException ex) {
-
-                            }
-                        
-            }
-        });
-                */
+     
        /*TextArea delete = new TextArea("Delete my event");
        delete.setUIID("NewsTopLine");
        delete.setEditable(false);
@@ -348,8 +326,7 @@ delete.setAlignment(RIGHT);
                
             }
         });*/
-        delete.setVisible(false);
-       if (org.equals(CurrentUser.getUsername())){delete.setVisible(true);}
+       
        Button image = new Button(img.fill(width, height));
        image.setUIID("Label");
        TextArea HostedBy = new TextArea(org+" is Hosting "+title);
@@ -367,6 +344,10 @@ delete.setAlignment(RIGHT);
       date.setUIID("NewsTopLine");
        date.setEditable(false);
        
+       
+          
+                
+       
        //date.setTextPosition(RIGHT);
        
            Style s = new Style(date.getUnselectedStyle());
@@ -377,19 +358,40 @@ delete.setAlignment(RIGHT);
        TextArea locationTxt = new TextArea("At "+location);
       locationTxt.setUIID("NewsTopLine");
        locationTxt.setEditable(false);
+       
+       
+        TextArea id = new TextArea(Integer.toString(E.getId()));
+      locationTxt.setUIID("NewsTopLine");
+       locationTxt.setEditable(false);
       
          cnt.add(BorderLayout.CENTER, 
                BoxLayout.encloseY(
-                       delete, 
+                       
                        image,
                        
                        
                        underTitle,
+                        id,
                        BoxLayout.encloseX(date, locationTxt)
+                      
                ));
         
         
-       add(cnt);
+       addAll(cnt,delete);
+       delete.addActionListener(l -> {
+            System.out.println("Im innnnn");
+                      
+                        ServiceEvent.getInstance().deleteEvent(Integer.parseInt(id.getText())) ;
+                            try {
+                                new EventsAll(res).show();
+                            } catch (IOException ex) {
+
+                            }
+                        
+            }
+        );
+         delete.setVisible(false);
+       if (org.equals(CurrentUser.getUsername())){delete.setVisible(true);}
        image.addActionListener(e -> ToastBar.showMessage(title, FontImage.MATERIAL_INFO));
    }
    
